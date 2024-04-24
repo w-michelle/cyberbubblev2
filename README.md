@@ -6,7 +6,6 @@ Cyber Bubble is a web app designed as a space for people to be in their ‘bubbl
 
 ## Built With
 
-- Vite
 - React
 - Firebase
 - TailwindCSS
