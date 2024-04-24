@@ -10,7 +10,7 @@ function Credit({ toggle }) {
         <div className="text-center w-full h-full rounded-[50%] bg-transparent  flex items-center flex-col justify-center px-12">
           <p className="font-bold">Audio Credits</p>
           <img
-            src="src/public/hsbclogo.svg"
+            src="/hsbclogo.svg"
             alt="logo of hsbc"
             className="m-4 mx-auto bg-white p-2"
             width={100}

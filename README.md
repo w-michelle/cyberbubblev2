@@ -14,7 +14,7 @@ Cyber Bubble is a web app designed as a space for people to be in their ‘bubbl
 ## Features
 
 - Create an account with Google or sign in anonymously.
-- **Homepage**- play sounds of different city while navigating between pages
+- **Homepage**- play sounds of different cities while navigating between pages
 - **Productive page** - create to-do list and document on text-editor.
 - **Log page** - a chat box that keeps a log of all the messages with timestamp and date.
 - **Airplane page** - play live air traffic control from different airports.

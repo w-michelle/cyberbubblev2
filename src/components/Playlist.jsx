@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import '../public/HongKong.mp3'
+
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
 import { useState, useEffect } from "react";
 
