@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 
-import React, { useEffect, useState } from "react";
+
+import { useEffect, useRef, useState } from "react";
 import { MdOutlineTipsAndUpdates } from "react-icons/md";
 import { atcList } from "../data/atc";
 
@@ -8,11 +9,11 @@ import { atcList } from "../data/atc";
 function Airplane() {
   const [toggle, setToggle] = useState(false);
   const [city, setCity] = useState("");
-  const [audio, setAudio] = useState();
+  // const [audio, setAudio] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
   const [pathname, setPathname] = useState();
 
-  let sound = audio;
+  let sound = useRef();
 
   let cities = [
     "Los Angeles",
@@ -27,39 +28,44 @@ function Airplane() {
   ];
   let sortedCities = cities.sort();
 
+  useEffect(() => {
+    togglePlayPause();
+    if (!sound.current) {
+     sound.current = new Audio("https://s1-fmt2.liveatc.net/kjfk9_s");
+      setPathname(window.location.pathname);
+    }
+
+    return () => (sound.current ? sound.current.pause() : "");
+  }, [city, toggle, pathname]);
+
+//on/off
+  const toggleBtn = () => {
+    setToggle(!toggle);
+  };
+
   const handleChange = (value) => {
     setCity(value);
     let soundUrl = atcList.find((item) => item.city === value).url;
-    sound.src = soundUrl;
+    sound.current.src = soundUrl;
   };
   const togglePlayPause = () => {
-    if (city.length === 0) {
-      return;
-    } else if (city.length !== 0 && toggle) {
-      sound.play();
+    if (city.length === 0) return;
+
+    if (city.length !== 0 && toggle) {
+      sound.current.play();
       setIsPlaying(true);
     } else if (city.length !== 0 && !toggle) {
-      sound.pause();
+      sound.current.pause();
       setIsPlaying(false);
     }
   };
 
-  const toggleBtn = () => {
-    setToggle(!toggle);
-  };
   const changeVolume = (e) => {
-    return (sound.volume = e.target.value / 100);
+    return (sound.current.volume = e.target.value / 100);
   };
 
-  useEffect(() => {
-    togglePlayPause();
-    if (!audio) {
-      setAudio(new Audio("https://s1-fmt2.liveatc.net/kjfk9_s"));
-      setPathname(window.location.pathname);
-    }
+ 
 
-    return () => (sound ? sound.pause() : "");
-  }, [city, toggle, pathname]);
 
   return (
     <div className="w-4/5 mx-auto">
@@ -118,30 +124,16 @@ function Airplane() {
           title="Sound wave"
         >
           <div className="relative left-[-11px]">
-            <div
-              id="bar-1"
-              className={`sbar ${!isPlaying ? "noanim" : ""}`}
-            ></div>
-            <div
-              id="bar-2"
-              className={`sbar ${!isPlaying ? "noanim" : ""}`}
-            ></div>
-            <div
-              id="bar-3"
-              className={`sbar ${!isPlaying ? "noanim" : ""}`}
-            ></div>
-            <div
-              id="bar-4"
-              className={`sbar ${!isPlaying ? "noanim" : ""}`}
-            ></div>
-            <div
-              id="bar-5"
-              className={`sbar ${!isPlaying ? "noanim" : ""}`}
-            ></div>
-            <div
-              id="bar-6"
-              className={`sbar ${!isPlaying ? "noanim" : ""}`}
-            ></div>
+            {
+              Array.from({length: 6}, (_, index) => (
+                <div
+                key={index}
+                id={`bar-${index + 1}`}
+                className={`sbar ${!isPlaying ? "noanim" : ""}`}
+              ></div>
+              ))
+            }
+         
           </div>
         </div>
       </div>

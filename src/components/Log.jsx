@@ -27,6 +27,23 @@ function Log() {
   const [allMessages, setAllMessages] = useState([]);
   const [user, loading] = useAuthState(auth);
 
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [allMessages]);
+
+  useEffect(() => {
+    let unsubscribe = () => {};
+
+    (async () => {
+        unsubscribe = await loadMessages();
+    })();
+    return () => {
+        unsubscribe(); 
+    };
+}, [user, loading]);
+
+
   const handleInput = (e) => {
     setMessageText(e.target.value);
   };
@@ -54,12 +71,15 @@ function Log() {
     }
   };
 
-  const loadMessages = async () => {
-    if (loading) return;
-    if (!user) return navigate("/");
+  const loadMessages = () => {
+    if (loading) return () => {};
+    if (!user) {
+      navigate('/')
+      return () => {}
+    }
     const collectionRef = collection(db, "mylog");
     const q = query(collectionRef, where("userId", "==", user.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+   return onSnapshot(q, (snapshot) => {
       let arr = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       let order = arr
         .map((item) => ({
@@ -70,7 +90,7 @@ function Log() {
 
       setAllMessages(order);
     });
-    return unsubscribe;
+    
   };
 
   const deleteMessage = async (id) => {
@@ -84,13 +104,7 @@ function Log() {
 
     setAllMessages(updatemsg);
   };
-  useEffect(() => {
-    scrollToBottom();
-  }, [allMessages]);
 
-  useEffect(() => {
-    loadMessages();
-  }, [user, loading]);
 
   return (
     <>

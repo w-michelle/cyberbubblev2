@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 
 
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -13,73 +13,53 @@ import Footer from "./Footer.jsx";
 
 
 function Playlist() {
-    const location = useLocation()
+  const location = useLocation()
   const pathname = location.pathname;
-  console.log(pathname)
+
 
   const [user, loading] = useAuthState(auth);
   const [currentIndex, setCurrentIndex] = useState(2);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentSound, setCurrentSound] = useState(null);
 
-  let sound = currentSound;
+  const sound = useRef(null)
 
-  const mainPlay = async (index) => {
-    if (currentIndex === index) {
-      togglePlayPause();
-      setIsPlaying(!isPlaying);
-    } else if (currentIndex !== index && isPlaying) {
-      setIsPlaying(!isPlaying);
-      setCurrentIndex(index);
+
+
+  const togglePlayPause= () => {
+    if(sound.current.paused) {
+      sound.current.play()
+      setIsPlaying(true)
     } else {
-      setCurrentIndex(index);
+      sound.current.pause()
+      setIsPlaying(false)
     }
-  };
-  const changeSound = () => {
-    if (sound !== null) {
-      sound.pause();
-
-      sound.src = audioList[currentIndex].url;
-      sound.loop = true;
-      setIsPlaying(!isPlaying);
+  }
+  const mainPlay = (index) => {
+    if(index == currentIndex && isPlaying) {
+      togglePlayPause()
     } else {
-      setCurrentSound(new Audio(audioList[currentIndex].url));
+      setCurrentIndex(index)
+      sound.current = new Audio(audioList[index].url)
+      sound.current.play()
+      setIsPlaying(true)
     }
-  };
-
-  const togglePlayPause = () => {
-    if (sound !== null) {
-      if (sound.paused) {
-        sound.play();
-        sound.loop = true;
-      } else {
-        sound.pause();
-      }
-    }
-  };
+  }
 
   const toggleBigBtn = () => {
-    if (isPlaying) {
-      setIsPlaying(false);
-      sound.pause();
+    if(!sound.current && !isPlaying) {
+      sound.current = new Audio(audioList[currentIndex].url)
+      sound.current.play()
+      setIsPlaying(true)
     } else {
-      setIsPlaying(true);
-      sound.play();
+      togglePlayPause()
     }
-  };
-  const changeVolume = (e) => {
-    return (sound.volume = e.target.value / 100);
-  };
-  useEffect(() => {
-    setCurrentSound(new Audio(audioList[currentIndex].url));
-    console.log('currentSound',currentSound)
-  }, []);
+  }
 
-  useEffect(() => {
-    changeSound();
-    togglePlayPause();
-    console.log('currentSound',currentSound)
-  }, [currentIndex]);
+  const changeVolume = (e) => {
+    return sound.current.volume = e.target.value/100
+  }
+
+
   return (
 
     <div className="text-white">

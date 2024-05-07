@@ -9,9 +9,9 @@ import { auth } from './utils/firebase.js';
 import AuthLanding from './components/AuthLanding.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import { RouterConfig } from './route.jsx';
+import Playlist from './components/Playlist.jsx';
 
 function App() {
-
 
 
   return (
@@ -20,8 +20,11 @@ function App() {
 
    <BrowserRouter>
        <Navbar />
+      
        <RouterConfig />
-       </BrowserRouter>
+       <Playlist />
+
+  </BrowserRouter>
     </div>
   )
 }

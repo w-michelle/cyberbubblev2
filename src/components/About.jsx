@@ -1,4 +1,4 @@
-function About({ toggle }) {
+function About({toggle}) {
     return (
       <div
         className="fixed flex justify-center items-center top-0 left-0 w-full h-full bg-glass backdrop-blur-[10px] z-50"

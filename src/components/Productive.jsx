@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 
@@ -26,19 +26,18 @@ function Productive() {
   const [user, loading] = useAuthState(auth);
   const [inputValue, setInputValue] = useState("");
   const [todoList, setTodoList] = useState([]);
-  const toDoScrollEndRef = useRef(null);
 
-  const scrollToBottom = () => {
-    toDoScrollEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [todoList]);
+    let unsubscribe = () => {};
 
-  useEffect(() => {
-    getData();
-  }, [user, loading]);
+    (async () => {
+        unsubscribe = await getData();
+    })();
+    return () => {
+        unsubscribe(); 
+    };
+}, [user, loading]);
 
   const handleAddToDo = async (e) => {
     setInputValue(e.target.value);
@@ -69,24 +68,25 @@ function Productive() {
     const docRef = doc(db, "todos", id);
     await deleteDoc(docRef);
   };
-  const getData = async () => {
-    if (loading) return;
-    if (!user) return navigate("/");
+  const getData = () => {
+    if (loading) return () => {};
+    if (!user) {
+        navigate("/");
+        return () => {};
+    }
+
     const collectionRef = collection(db, "todos");
     const q = query(collectionRef, where("userId", "==", user.uid));
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      let arr = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      let order = arr
-        .map((item) => ({
-          ...item,
-          createdAt: item.createdAt ? item.createdAt.toDate() : null,
-        }))
-        .sort((a, b) => a.createdAt - b.createdAt);
-      setTodoList(order);
+    return onSnapshot(q, (snapshot) => {
+        const arr = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+            createdAt: doc.data().createdAt ? doc.data().createdAt.toDate() : null
+        })).sort((a, b) => a.createdAt - b.createdAt);
+        setTodoList(arr);
     });
-    return unsubscribe;
-  };
+};
 
   return (
   
@@ -102,7 +102,7 @@ function Productive() {
           onKeyDown={handleAddToDo}
         />
         <div className="p-2 lg:h-[400px] md:h-[300px] text-gray-200 overflow-auto scrollbar h-[200px] rounded-2">
-          <ul className="">
+          <ul className="" >
             {todoList.map((todo) => (
               <li key={todo.id} className="flex mt-2 items-center">
                 <input
