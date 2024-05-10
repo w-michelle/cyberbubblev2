@@ -41,6 +41,7 @@ function Playlist() {
       setCurrentIndex(index)
       sound.current = new Audio(audioList[index].url)
       sound.current.play()
+      sound.current.loop = true
       setIsPlaying(true)
     }
   }

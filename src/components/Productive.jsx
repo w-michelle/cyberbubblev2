@@ -95,7 +95,7 @@ function Productive() {
         <input
           className="px-4 py-2 mb-2 w-full outline-none rounded-md text-xs placeholder-lightgrey text-gray-200 bg-transparent border-[1px] border-greyBlue"
           type="text"
-          placeholder=""
+          placeholder="Enter a todo . . ."
           enterKeyHint="done"
           value={inputValue}
           onChange={handleAddToDo}
