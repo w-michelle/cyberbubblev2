@@ -37,6 +37,13 @@ function Playlist() {
   const mainPlay = (index) => {
     if(index == currentIndex && isPlaying) {
       togglePlayPause()
+    } else if(index !== currentIndex && isPlaying){
+     sound.current.pause()
+      setCurrentIndex(index)
+      sound.current = new Audio(audioList[index].url)
+      sound.current.play()
+      sound.current.loop = true
+      setIsPlaying(true)
     } else {
       setCurrentIndex(index)
       sound.current = new Audio(audioList[index].url)

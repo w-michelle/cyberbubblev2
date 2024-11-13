@@ -36,9 +36,13 @@ const formatMsgTime = (date) => {
     hour = hour - 12;
     daytime = "pm";
   }
+  if (hour == 0) {
+    hour = 12;
+  }
+
   if (mins < 10) {
     mins = "0" + mins;
   }
-  return [hour, mins].join(":") + daytime;
+  return [hour, mins].join(":") + " " + daytime;
 };
 export { formatTime, formatDate, formatLogDate, formatMsgTime };
