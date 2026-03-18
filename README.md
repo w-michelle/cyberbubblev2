@@ -14,19 +14,19 @@ Cyber Bubble is a web app designed as a space for people to be in their ‘bubbl
 
 - Create an account with Google or sign in anonymously.
 - **Homepage**- play sounds of different cities while navigating between pages
-- **Productive page** - create to-do list and document on text-editor.
+- **Workspace** - create to-do list and document on text-editor.
 - **Log page** - a chat box that keeps a log of all the messages with timestamp and date.
 - **Airplane page** - play live air traffic control from different airports.
 
 ## At a Glance
 
-|              Homepage              |             Productive              |
-| :--------------------------------: | :---------------------------------: |
-| ![](src/public/images/cb-home.png) | ![](src/public//images/cb-prod.png) |
+|                     Homepage                      |                     Workspace                     |
+| :-----------------------------------------------: | :-----------------------------------------------: |
+| <img src="public/images/cb-home.png" width="350"> | <img src="public/images/cb-prod.png" width="350"> |
 
-|                Log                |        Air Traffic Control        |
-| :-------------------------------: | :-------------------------------: |
-| ![](src/public/images/cb-log.png) | ![](src/public/images/cb-atc.png) |
+|                       Log                        |               Air Traffic Control                |
+| :----------------------------------------------: | :----------------------------------------------: |
+| <img src="public/images/cb-log.png" width="350"> | <img src="public/images/cb-atc.png" width="350"> |
 
 ## Getting Started
 

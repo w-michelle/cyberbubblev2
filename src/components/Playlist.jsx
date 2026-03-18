@@ -3,7 +3,6 @@
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
 import { useState, useRef } from "react";
 
-
 import { useAuthState } from "react-firebase-hooks/auth";
 
 import { audioList } from "../data/audio.js";
@@ -11,67 +10,56 @@ import { useLocation } from "react-router-dom";
 import { auth } from "../utils/firebase.js";
 import Footer from "./Footer.jsx";
 
-
 function Playlist() {
-  const location = useLocation()
+  const location = useLocation();
   const pathname = location.pathname;
-
 
   const [user, loading] = useAuthState(auth);
   const [currentIndex, setCurrentIndex] = useState(2);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const sound = useRef(null)
+  const sound = useRef(new Audio());
 
-
-
-  const togglePlayPause= () => {
-    if(sound.current.paused) {
-      sound.current.play()
-      setIsPlaying(true)
+  const togglePlayPause = () => {
+    if (sound.current.paused) {
+      sound.current.play();
+      setIsPlaying(true);
     } else {
-      sound.current.pause()
-      setIsPlaying(false)
+      sound.current.pause();
+      setIsPlaying(false);
     }
-  }
+  };
   const mainPlay = (index) => {
-    if(index == currentIndex && isPlaying) {
-      togglePlayPause()
-    } else if(index !== currentIndex && isPlaying){
-     sound.current.pause()
-      setCurrentIndex(index)
-      sound.current = new Audio(audioList[index].url)
-      sound.current.play()
-      sound.current.loop = true
-      setIsPlaying(true)
+    if (currentIndex === index) {
+      togglePlayPause(); // pause if the same track is clicked
     } else {
-      setCurrentIndex(index)
-      sound.current = new Audio(audioList[index].url)
-      sound.current.play()
-      sound.current.loop = true
-      setIsPlaying(true)
+      if (sound.current) {
+        sound.current.pause(); // stop any playing audio to play a different one
+      }
+      sound.current.src = audioList[index].url;
+      sound.current.play();
+      sound.current.loop = true;
+      setCurrentIndex(index);
+      setIsPlaying(true);
     }
-  }
+  };
 
   const toggleBigBtn = () => {
-    if(!sound.current && !isPlaying) {
-      sound.current = new Audio(audioList[currentIndex].url)
-      sound.current.play()
-      setIsPlaying(true)
+    if (!sound.current && !isPlaying) {
+      sound.current = new Audio(audioList[currentIndex].url);
+      sound.current.play();
+      setIsPlaying(true);
     } else {
-      togglePlayPause()
+      togglePlayPause();
     }
-  }
+  };
 
   const changeVolume = (e) => {
-    return sound.current.volume = e.target.value/100
-  }
-
+    return (sound.current.volume = e.target.value / 100);
+  };
 
   return (
-
     <div className="text-white">
-   
       <div
         className={` hover:opacity-100 big-btn text-lg mt-4 sticky opacity-80 w-1/8 flex justify-center ${
           pathname === "/" || pathname === "/airplane" ? "hidden" : ""
@@ -97,14 +85,13 @@ function Playlist() {
         </div>
       </div>
       {user && (
-        <div className={`${
-          pathname === "/" ? "" : "hidden"
-        }`}>
-          <ul
-            className={`playlist flex flex-col items-center py-6 `}
-          >
+        <div className={`${pathname === "/" ? "" : "hidden"}`}>
+          <ul className={`playlist flex flex-col items-center py-6 `}>
             {audioList?.map((item, index) => (
-              <li className="mt-6" key={item.id}>
+              <li
+                className="mt-6"
+                key={item.id}
+              >
                 <p className="text-xs mb-2">
                   {item.country.split(/(?=[A-Z])/).join(" ")}
                 </p>
@@ -137,10 +124,9 @@ function Playlist() {
               </li>
             ))}
           </ul>
-             <Footer />
+          <Footer />
         </div>
       )}
-     
     </div>
   );
 }
