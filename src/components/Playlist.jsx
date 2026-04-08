@@ -20,7 +20,11 @@ function Playlist() {
 
   const sound = useRef(new Audio());
 
-  const togglePlayPause = () => {
+  const togglePlayPause = (index) => {
+    if (!sound.current.src) {
+      sound.current.src = audioList[index].url;
+      setCurrentIndex(index);
+    }
     if (sound.current.paused) {
       sound.current.play();
       setIsPlaying(true);
@@ -31,7 +35,7 @@ function Playlist() {
   };
   const mainPlay = (index) => {
     if (currentIndex === index) {
-      togglePlayPause(); // pause if the same track is clicked
+      togglePlayPause(index); // pause if the same track is clicked
     } else {
       if (sound.current) {
         sound.current.pause(); // stop any playing audio to play a different one

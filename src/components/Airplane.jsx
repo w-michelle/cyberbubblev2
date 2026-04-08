@@ -1,10 +1,8 @@
 /* eslint-disable no-unused-vars */
 
-
 import { useEffect, useRef, useState } from "react";
 import { MdOutlineTipsAndUpdates } from "react-icons/md";
 import { atcList } from "../data/atc";
-
 
 function Airplane() {
   const [toggle, setToggle] = useState(false);
@@ -31,14 +29,14 @@ function Airplane() {
   useEffect(() => {
     togglePlayPause();
     if (!sound.current) {
-     sound.current = new Audio("https://s1-fmt2.liveatc.net/kjfk9_s");
+      sound.current = new Audio("https://s1-fmt2.liveatc.net/kjfk9_s");
       setPathname(window.location.pathname);
     }
 
     return () => (sound.current ? sound.current.pause() : "");
   }, [city, toggle, pathname]);
 
-//on/off
+  //on/off
   const toggleBtn = () => {
     setToggle(!toggle);
   };
@@ -48,6 +46,7 @@ function Airplane() {
     let soundUrl = atcList.find((item) => item.city === value).url;
     sound.current.src = soundUrl;
   };
+
   const togglePlayPause = () => {
     if (city.length === 0) return;
 
@@ -63,9 +62,6 @@ function Airplane() {
   const changeVolume = (e) => {
     return (sound.current.volume = e.target.value / 100);
   };
-
- 
-
 
   return (
     <div className="w-4/5 mx-auto">
@@ -98,7 +94,10 @@ function Airplane() {
             {toggle ? "on" : "off"}
           </p>
         </div>
-        <label htmlFor="airport-select" className="text-sm text-center">
+        <label
+          htmlFor="airport-select"
+          className="text-sm text-center"
+        >
           Live ATC <br></br>
           choose an airport
         </label>
@@ -108,11 +107,15 @@ function Airplane() {
           className={`form-select md:w-1/5 w-1/2 focus:ring-0 focus:border-darkgrey focus:within:hidden ${
             !toggle ? "cursor-not-allowed" : ""
           } relative text-sm border-2 border-darkgrey py-2 px-4 bg-black mt-4 mb-4 outline-none`}
-          disabled={toggle ? "" : "disabled"}
+          disabled={!toggle}
         >
           <option>-</option>
           {sortedCities.map((item, index) => (
-            <option key={index} value={item} disabled={toggle ? false : true}>
+            <option
+              key={index}
+              value={item}
+              disabled={toggle ? false : true}
+            >
               {item}
             </option>
           ))}
@@ -124,16 +127,13 @@ function Airplane() {
           title="Sound wave"
         >
           <div className="relative left-[-11px]">
-            {
-              Array.from({length: 6}, (_, index) => (
-                <div
+            {Array.from({ length: 6 }, (_, index) => (
+              <div
                 key={index}
                 id={`bar-${index + 1}`}
                 className={`sbar ${!isPlaying ? "noanim" : ""}`}
               ></div>
-              ))
-            }
-         
+            ))}
           </div>
         </div>
       </div>
